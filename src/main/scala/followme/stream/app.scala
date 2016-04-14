@@ -14,7 +14,10 @@ class Sauron extends Actor with LazyLogging {
 
   override def preStart(): Unit = {
     val searcher = context.actorOf(Props[TweetSearcher], "searcher")
-    Scheduling.every(searcher ! Search("lang:en digital"), 10 * 60 * 1000) // 10 minutes
+    Scheduling.every(searcher ! Search("lang:en digital"), 30 * 60 * 1000) // 30 minutes
+
+    val unfollower = context.actorOf(Props[FolloweeCleaner], "leon")
+    Scheduling.every(unfollower ! Leon, 12 * 60 * 60 * 1000) // 12 hours
   }
 
   def receive = {
