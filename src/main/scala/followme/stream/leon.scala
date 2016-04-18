@@ -22,7 +22,12 @@ class FolloweeCleaner extends Actor with LazyLogging {
         val maxFolloweeSize = (.9 * followers.length).toInt
         val unfollowSize = Math.max(0, followees.length - maxFolloweeSize)
 
-        followees.take(unfollowSize).foreach(userId => unfollow ! UnfollowRequest(userId))
+        val unfollowees: Array[Long] = followees.take(unfollowSize)
+        logger.info(
+          s"Ready to unfollow ${unfollowees.length} among the ${followees.length} " +
+            s"(because only got ${followers.length} followers)"
+        )
+        unfollowees.foreach(userId => unfollow ! UnfollowRequest(userId))
       }
   }
 

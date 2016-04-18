@@ -24,10 +24,12 @@ class TweetSearcher extends Actor with LazyLogging {
 
       if (conf.getBoolean("app.retweet.enable")) {
         val rt = context.actorOf(Props[SerialRetweeter])
+        logger.info(s"Retweeting ${tweets.length} tweets")
         tweets.foreach { tweet => rt ! Retweet(tweet) }
       }
       if (conf.getBoolean("app.follow.enable")) {
         val follow = context.actorOf(Props[SerialFollower])
+        logger.info(s"Following ${tweets.length} new users")
         tweets.foreach { tweet => follow ! Follow(tweet.getUser) }
       }
   }
